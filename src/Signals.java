@@ -54,11 +54,14 @@ public class Signals extends JFrame {
 
             drawGrid(g2d, bits);
 
+            g2d.setStroke(new BasicStroke(3));
+
             switch (mode) {
                 case "nrz" -> drawNrz(g2d, false);
                 case "nrzi" -> drawNrz(g2d, true);
                 case "manchester" -> drawManchester(g2d);
                 case "manchesterDiff" -> drawManchesterDiff(g2d);
+                case "miller" -> drawMiller(g2d);
             }
         }
 
@@ -79,7 +82,6 @@ public class Signals extends JFrame {
         void drawNrz(Graphics2D g2d, boolean inverted) {
 
             Character previous = null;
-            g2d.setStroke(new BasicStroke(3));
             int xGap = 1000 / bits.length();
             int bit = 0;
 
@@ -97,7 +99,6 @@ public class Signals extends JFrame {
 
         void drawManchester(Graphics2D g2d) {
             Character previous = null;
-            g2d.setStroke(new BasicStroke(3));
             int xGap = 1000 / (bits.length() * 2);
             int bit = 0; // Will be incremented 2 times for each bit
             for(Character c : bits.toCharArray()) {
@@ -116,7 +117,6 @@ public class Signals extends JFrame {
 
         void drawManchesterDiff(Graphics2D g2d) {
             int previousY = 350;
-            g2d.setStroke(new BasicStroke(3));
             int xGap = 1000 / (bits.length() * 2);
             int bit = 0; // Will be incremented 2 times for each bit
             for(Character c : bits.toCharArray()) {
@@ -126,7 +126,7 @@ public class Signals extends JFrame {
                     g2d.drawLine(xGap * bit, 50, xGap * bit, 350); // Transition in the begining if the bit is 0
                     yLeft = previousY == 350 ? 50 : 350; // The Y of the left part of the bit is the opposite of the previous Y
                     yRight = previousY;
-                } else {
+                }else {
                     yLeft = previousY;
                     yRight = previousY == 350 ? 50 : 350; // The Y of the right part of the bit is the opposite of the previous Y
                 }
@@ -134,6 +134,31 @@ public class Signals extends JFrame {
                 g2d.drawLine(xGap * bit, 50, xGap * bit, 350); // Transition in the middle
                 g2d.drawLine(xGap * bit++, yRight, xGap * bit, yRight);
                 previousY = yRight;
+            }
+        }
+
+        void drawMiller(Graphics2D g2d) {
+            Character previous = null;
+            int previousY = 350;
+            int xGap = 1000 / (bits.length() * 2);
+            int bit = 0; // Will be incremented 2 times for each bit
+            for(Character c : bits.toCharArray()) {
+                g2d.drawString(c.toString(), xGap * bit + 10, 20); // Print the bit value
+                if(c == '1') {
+                    g2d.drawLine(xGap * bit++, previousY, xGap * bit, previousY);
+                    g2d.drawLine(xGap * bit, 50, xGap * bit, 350);
+                    previousY = previousY == 50 ? 350 : 50; // Can be replaced by previousY = (previousY + 300) % 600
+                    g2d.drawLine(xGap * bit++, previousY, xGap * bit, previousY);
+                }else {
+                    if(previous != null && previous == '0')
+                        g2d.drawLine(xGap * bit, 50, xGap * bit, 350); // Transitions at the begining if the previous bit is also 0
+
+                    // Switches the Y if the previous bit is a 0
+                    previousY = previous != null && previous != '0' ? previousY : (previousY + 300)%600;
+                    // Draws the complete line at the right Y
+                    g2d.drawLine(xGap * bit, previousY, xGap * (bit+=2), previousY);
+                }
+                previous = c;
             }
         }
     }
