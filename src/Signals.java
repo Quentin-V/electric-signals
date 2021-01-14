@@ -58,6 +58,7 @@ public class Signals extends JFrame {
                 case "nrz" -> drawNrz(g2d, false);
                 case "nrzi" -> drawNrz(g2d, true);
                 case "manchester" -> drawManchester(g2d);
+                case "manchesterDiff" -> drawManchesterDiff(g2d);
             }
         }
 
@@ -65,7 +66,6 @@ public class Signals extends JFrame {
 
             g2d.drawLine(0, 0, 0, 400);
 
-            //set the stroke of the copy, not the original
             Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{2}, 0);
             g2d.setStroke(dashed);
             int xGap = 1000 / bits.length();
@@ -108,9 +108,32 @@ public class Signals extends JFrame {
                 int yLeft = c == '0' ? 350 : 50;
                 int yRight = c == '0' ? 50 : 350;
                 g2d.drawLine(xGap * bit++, yLeft, xGap * bit, yLeft);
-                g2d.drawLine(xGap * bit, 50, xGap * bit, 350);
+                g2d.drawLine(xGap * bit, 50, xGap * bit, 350); // Transition in the middle
                 g2d.drawLine(xGap * bit++, yRight, xGap * bit, yRight);
                 previous = c;
+            }
+        }
+
+        void drawManchesterDiff(Graphics2D g2d) {
+            int previousY = 350;
+            g2d.setStroke(new BasicStroke(3));
+            int xGap = 1000 / (bits.length() * 2);
+            int bit = 0; // Will be incremented 2 times for each bit
+            for(Character c : bits.toCharArray()) {
+                g2d.drawString(c.toString(), xGap * bit + 10, 20); // Print the bit value
+                int yLeft, yRight;
+                if(c == '0') {
+                    g2d.drawLine(xGap * bit, 50, xGap * bit, 350); // Transition in the begining if the bit is 0
+                    yLeft = previousY == 350 ? 50 : 350; // The Y of the left part of the bit is the opposite of the previous Y
+                    yRight = previousY;
+                } else {
+                    yLeft = previousY;
+                    yRight = previousY == 350 ? 50 : 350; // The Y of the right part of the bit is the opposite of the previous Y
+                }
+                g2d.drawLine(xGap * bit++, yLeft, xGap * bit, yLeft);
+                g2d.drawLine(xGap * bit, 50, xGap * bit, 350); // Transition in the middle
+                g2d.drawLine(xGap * bit++, yRight, xGap * bit, yRight);
+                previousY = yRight;
             }
         }
     }
