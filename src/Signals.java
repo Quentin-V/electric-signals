@@ -3,10 +3,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Signals extends JFrame {
+public class Signals extends JFrame implements ActionListener {
 
     String bits;
     String mode;
+    JPanel left;
+    JButton back;
 
     private Signals(String bits, String mode) {
 
@@ -15,7 +17,7 @@ public class Signals extends JFrame {
 
         setTitle("Electrical signals");
 
-        JPanel left = new JPanel();
+        left = new JPanel();
         left.setLayout(new GridLayout(3,1));
         left.add(new JLabel("nV"));
         left.add(new JLabel("0"));
@@ -23,13 +25,23 @@ public class Signals extends JFrame {
 
         left.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 
+        back = new JButton("Back");
+        back.addActionListener(this);
+
         add(left, BorderLayout.WEST);
         add(new SignalDrawing());
+        add(back, BorderLayout.SOUTH);
 
         pack();
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        this.dispose();
+        new ChooseSignal();
     }
 
     private class SignalDrawing extends JPanel {
