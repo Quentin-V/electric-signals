@@ -81,6 +81,8 @@ public class Signals extends JFrame {
 
         void drawNrz(Graphics2D g2d, boolean inverted) {
 
+            setTitle("Electric Signals - NRZ" + (inverted ? "i":""));
+
             Character previous = null;
             int xGap = 1000 / bits.length();
             int bit = 0;
@@ -98,6 +100,9 @@ public class Signals extends JFrame {
         }
 
         void drawManchester(Graphics2D g2d) {
+
+            setTitle("Electric Signals - Manchester");
+
             Character previous = null;
             int xGap = 1000 / (bits.length() * 2);
             int bit = 0; // Will be incremented 2 times for each bit
@@ -116,6 +121,9 @@ public class Signals extends JFrame {
         }
 
         void drawManchesterDiff(Graphics2D g2d) {
+
+            setTitle("Electric Signals - Manchester Differential");
+
             int previousY = 350;
             int xGap = 1000 / (bits.length() * 2);
             int bit = 0; // Will be incremented 2 times for each bit
@@ -138,6 +146,9 @@ public class Signals extends JFrame {
         }
 
         void drawMiller(Graphics2D g2d) {
+
+            setTitle("Electric Signals - Miller");
+
             Character previous = null;
             int previousY = 350;
             int xGap = 1000 / (bits.length() * 2);
