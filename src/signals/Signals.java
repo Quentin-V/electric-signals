@@ -5,6 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Classe principale qui gère les autres classes permettant d'afficher
+ * et de dessiner le signal électrique
+ */
 public class Signals extends JFrame implements ActionListener {
 
     String bits;
@@ -12,6 +16,11 @@ public class Signals extends JFrame implements ActionListener {
     JPanel left;
     JButton back;
 
+    /**
+     * Constructeur de la classe principale, ajoute les panels à la Frame pour l'affichage du signal
+     * @param bits La trame de bits donnée au programme
+     * @param mode Le mode de signal utilisé
+     */
     protected Signals(String bits, String mode) {
 
         this.bits = bits;
@@ -46,6 +55,10 @@ public class Signals extends JFrame implements ActionListener {
         new ChooseSignal(this.bits, this.mode);
     }
 
+    /**
+     * Main de la classe principale, lance la fenêtre de choix du signal
+     * @param args Arguments du programme (non utilisés)
+     */
     public static void main(String[] args) {
         new ChooseSignal();
     }

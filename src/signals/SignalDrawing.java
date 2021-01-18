@@ -7,30 +7,44 @@ public class SignalDrawing extends JPanel {
 
     private Signals sig;
 
+    /**
+     * Constructeur de la classe qui récupère le Controleur Signals
+     * @param sig Controleur de la classe Signals
+     */
     SignalDrawing(Signals sig) {
         super();
         this.sig = sig;
     }
 
+    /**
+     * Modifie les dimensions de base du panel
+     * @return Les dimensions voulues (1000x400)
+     */
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(1000, 400);
     }
 
+    /**
+     * Appelle la méthode drawSignal à chaque appel de paintComponent
+     * @param g Le Graphics du panel
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.GREEN);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
-        g.setColor(Color.BLACK);
         drawSignal(g, sig.bits);
     }
 
+    /**
+     * Méthode qui appelle les fonctions qui dessinent le signal en fonction du mode choisi ainsi que la grille
+     * @param g Le Graphics du panel
+     * @param bits La trame de bits à dessiner
+     */
     private void drawSignal(Graphics g, String bits) {
 
         Graphics2D g2d = (Graphics2D) g.create();
 
-        drawGrid(g2d, bits);
+        drawGrid(g2d);
 
         g2d.setStroke(new BasicStroke(3));
 
@@ -43,20 +57,29 @@ public class SignalDrawing extends JPanel {
         }
     }
 
-    void drawGrid(Graphics2D g2d, String bits) {
+    /**
+     * Méthode qui dessine une grille en pointillés qui sert de repère
+     * @param g2d Le Graphics2D du panel
+     */
+    void drawGrid(Graphics2D g2d) {
 
         g2d.drawLine(0, 0, 0, 400);
 
         Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{2}, 0);
         g2d.setStroke(dashed);
-        int xGap = 1000 / bits.length();
+        int xGap = 1000 / sig.bits.length();
         int bit = 0;
-        for(Character ignored : bits.toCharArray()) {
+        for(Character ignored : sig.bits.toCharArray()) {
             g2d.drawLine(xGap * ++bit, 0, xGap * bit, 400);
         }
         g2d.drawLine(0, 200, 1000, 200);
     }
 
+    /**
+     * Méthode qui dessine le signal avec la représentation NRZ ou NRZI
+     * @param g2d Le Graphics2D du panel
+     * @param inverted True si la représentation est NRZI, false sinon
+     */
     void drawNrz(Graphics2D g2d, boolean inverted) {
 
         sig.setTitle("Electric Signals - NRZ" + (inverted ? "i":""));
@@ -77,6 +100,10 @@ public class SignalDrawing extends JPanel {
 
     }
 
+    /**
+     * Méthode qui dessine le signal avec la représentation Manchester
+     * @param g2d Le Graphics2D du panel
+     */
     void drawManchester(Graphics2D g2d) {
 
         sig.setTitle("Electric Signals - Manchester");
@@ -98,6 +125,10 @@ public class SignalDrawing extends JPanel {
         }
     }
 
+    /**
+     * Méthode qui dessine le signal avec la représentation Manchester différentielle
+     * @param g2d Le Graphics2D du panel
+     */
     void drawManchesterDiff(Graphics2D g2d) {
 
         sig.setTitle("Electric Signals - Manchester Differential");
@@ -123,6 +154,10 @@ public class SignalDrawing extends JPanel {
         }
     }
 
+    /**
+     * Méthode qui dessine le signal avec la représentation Miller
+     * @param g2d Le Graphics2D du panel
+     */
     void drawMiller(Graphics2D g2d) {
 
         sig.setTitle("Electric Signals - Miller");

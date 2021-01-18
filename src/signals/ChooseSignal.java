@@ -5,6 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Classe qui permet à l'utilisateur de choisir la trame de bits ainsi
+ * que le mode de signal qui sera ensuite dessiné
+ */
 public class ChooseSignal extends JFrame implements ActionListener {
 
     JPanel pnl, bitsInputPnl, pnlChoix;
@@ -14,6 +18,9 @@ public class ChooseSignal extends JFrame implements ActionListener {
     ButtonGroup choix;
     JRadioButton nrz, nrzi, manchester, manchesterDiff, miller;
 
+    /**
+     * Constructeur qui crée la fenêtre, affiche la zone de texte ainsi que les boutons permettant de choisir le mode
+     */
     protected ChooseSignal() {
 
         setTitle("Choose the signal");
@@ -70,6 +77,11 @@ public class ChooseSignal extends JFrame implements ActionListener {
 
     }
 
+    /**
+     * Constructeur paramétré permettant de recharger la fenêtre de choix avec un état précis
+     * @param bits La tramde de bits qui sera initialement dans la zone de texte
+     * @param mode Le mode qui sera sélectioné de base parmis les modes proposés
+     */
     ChooseSignal(String bits, String mode) {
         this();
         bitsInput.setText(bits);
@@ -79,11 +91,17 @@ public class ChooseSignal extends JFrame implements ActionListener {
             case "nrzi" -> selected = nrzi;
             case "manchester" -> selected = manchester;
             case "manchesterDiff" -> selected = manchesterDiff;
-            case "Miller" -> selected = miller;
+            case "miller" -> selected = miller;
         }
         choix.setSelected(selected.getModel(), true);
     }
 
+    /**
+     * Méthode qui gère l'appui sur le bouton pour passer au dessin du signal
+     * Affiche une fenêtre d'erreur si la trame de bits n'est pas au bon format
+     * Ouvre la fenêtre de dessin sinon
+     * @param e Evenement
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
 
